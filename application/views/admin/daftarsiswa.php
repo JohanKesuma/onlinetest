@@ -34,7 +34,7 @@
                 <td>
                     <div>
                         <a class="btn btn-primary mr-1 btn-sm" href="<?= base_url('admin/ubahsiswa/'.$ds['identity_number']) ?>">Ubah</a>
-                        <button type="button" class="btn btn-danger btn-sm">Hapus</button>
+                        <a class="btn btn-danger mr-1 btn-sm" href="<?= base_url('admin/hapussiswa/'.$ds['user_id']) ?>">Hapus</a>
                     </div>
                 </td>
             </tr>

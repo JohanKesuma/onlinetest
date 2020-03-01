@@ -1,12 +1,12 @@
 <?php
 
-class userModel extends CI_Model 
+class userModel extends CI_Model
 {
     /**
      * Get user by identity_number
-     * 
+     *
      * @param string $email email user
-     * 
+     *
      */
     public function getByIdentityNumber($number = '')
     {
@@ -15,13 +15,15 @@ class userModel extends CI_Model
         ])->row_array();
     }
 
-    public function getById($id) {
+    public function getById($id)
+    {
         return $this->db->get_where('user', [
             'user_id' => $id
         ])->row_array();
     }
 
-    public function getAll($role = 1) {
+    public function getAll($role = 1)
+    {
         $this->db->where([
             'role' => $role
             ]);
@@ -29,7 +31,13 @@ class userModel extends CI_Model
         return $this->db->get('user')->result_array();
     }
 
-    public function insert($role = 1) {
+    public function deleteById($user_id)
+    {
+        
+    }
+
+    public function insert($role = 1)
+    {
         $identity_number = $this->input->post('nis');
         $name = $this->input->post('name');
         $password = password_hash($this->input->post('password1'), PASSWORD_DEFAULT);
@@ -46,11 +54,12 @@ class userModel extends CI_Model
     }
 
     /**
-     * 
+     *
      * update nis dan nama saja, tidak dengan password
-     * 
+     *
      */
-    public function update($identity_number) {
+    public function update($identity_number)
+    {
         $number = $this->input->post('nis');
         $name = $this->input->post('name');
 

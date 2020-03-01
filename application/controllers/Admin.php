@@ -85,8 +85,6 @@ class Admin extends CI_Controller
             $is_unique = '|is_unique[user.identity_number]';
         }
 
-        echo($is_unique);
-
         $this->form_validation->set_rules('nis', "NIS", 'required|trim'.$is_unique);
         $this->form_validation->set_rules('name', "Nama", 'required|trim');
 
@@ -110,5 +108,17 @@ class Admin extends CI_Controller
             </div>');
             redirect('admin/daftarsiswa');
         }
+    }
+
+    public function hapusSiswa($user_id) {
+        $this->db->where('user_id', $user_id);
+        $this->db->delete('user');
+        $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+            Data siswa berhasil dihapus.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>');
+        redirect('admin/daftarsiswa');
     }
 }
