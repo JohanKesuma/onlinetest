@@ -1,3 +1,4 @@
+<?= $this->session->flashdata('message'); ?>
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
@@ -32,7 +33,7 @@
                 <td><?= $ds['name']; ?></td>
                 <td>
                     <div>
-                        <a class="btn btn-primary mr-1 btn-sm" href="<?= base_url('admin/ubahsiswa/'.$ds['user_id']) ?>">Ubah</a>
+                        <a class="btn btn-primary mr-1 btn-sm" href="<?= base_url('admin/ubahsiswa/'.$ds['identity_number']) ?>">Ubah</a>
                         <button type="button" class="btn btn-danger btn-sm">Hapus</button>
                     </div>
                 </td>

@@ -44,4 +44,22 @@ class userModel extends CI_Model
         $this->db->insert('user', $data);
         return $this->db->insert_id();
     }
+
+    /**
+     * 
+     * update nis dan nama saja, tidak dengan password
+     * 
+     */
+    public function update($identity_number) {
+        $number = $this->input->post('nis');
+        $name = $this->input->post('name');
+
+        $data = [
+            'identity_number' => $number,
+            'name' => $name
+        ];
+
+        $this->db->where('identity_number', $identity_number);
+        $this->db->update('user', $data);
+    }
 }

@@ -48,6 +48,14 @@ class Admin extends CI_Controller
 
         if ($this->form_validation->run() == true) {
             $this->UserModel->insert();
+            $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+            Data siswa berhasil diubah.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>');
+            redirect('admin/tambahsiswa');
+            return;
         }
 
         $data['user'] = $this->UserModel->getByIdentityNumber(1001); // admin
@@ -60,16 +68,47 @@ class Admin extends CI_Controller
         $this->load->view('templates/footer');
     }
 
-    public function ubahSiswa($id)
+    public function ubahSiswa($nis)
     {
-        $data['siswa'] = $this->UserModel->getById($id);
-        $data['user'] = $this->UserModel->getByIdentityNumber(1001);
-        $data['title'] = 'Ubah Siswa';
+        $this->load->library('form_validation');
 
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('admin/ubahsiswa', $data);
-        $this->load->view('templates/footer');
+        
+        $number = $this->input->post('nis');
+        if ($number) {
+            if ($nis == $number) {
+                $is_unique = '';
+            }
+            else {
+                $is_unique = '|is_unique[user.identity_number]';
+            }
+        } else {
+            $is_unique = '|is_unique[user.identity_number]';
+        }
+
+        echo($is_unique);
+
+        $this->form_validation->set_rules('nis', "NIS", 'required|trim'.$is_unique);
+        $this->form_validation->set_rules('name', "Nama", 'required|trim');
+
+        if ($this->form_validation->run() == false) {
+            $data['siswa'] = $this->UserModel->getByIdentityNumber($nis);
+            $data['user'] = $this->UserModel->getByIdentityNumber(1001);
+            $data['title'] = 'Ubah Siswa';
+    
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/sidebar', $data);
+            $this->load->view('templates/topbar', $data);
+            $this->load->view('admin/ubahsiswa', $data);
+            $this->load->view('templates/footer');
+        } else {
+            $this->UserModel->update($nis);
+            $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+            Data siswa berhasil diubah.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>');
+            redirect('admin/daftarsiswa');
+        }
     }
 }
