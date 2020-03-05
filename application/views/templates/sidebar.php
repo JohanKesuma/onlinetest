@@ -52,7 +52,7 @@
     </div>
 
     <li class="nav-item">
-        <a class="nav-link" href="<?= base_url('admin') ?>/daftarsiswa">
+        <a class="nav-link" href="<?= base_url('admin') ?>/paketsoal">
             <i class="fas fa-fw fa-user"></i>
             <span>Paket Soal</span></a>
     </li>

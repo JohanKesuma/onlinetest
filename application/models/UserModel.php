@@ -1,6 +1,6 @@
 <?php
 
-class userModel extends CI_Model
+class UserModel extends CI_Model
 {
     /**
      * Get user by identity_number
