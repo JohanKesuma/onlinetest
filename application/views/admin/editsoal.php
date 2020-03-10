@@ -14,15 +14,13 @@
 
         <div class="card">
             <div class="card-header">
-                Form Tambah Soal
+                Form Edit Soal
             </div>
             <div class="card-body">
                 <form action="" method="post">
-                    <input type="hidden" class="form-control" id="package_id" name="package_id"
-                        value="<?= $packageId; ?>">
                     <div class="form-group">
                         <label for="nama">Soal</label>
-                        <textarea type="text" class="form-control" id="soal" name="soal" rows="6"><?= set_value('soal'); ?></textarea>
+                        <textarea type="text" class="form-control" id="soal" name="soal" rows="6"><?= $question['text']; ?></textarea>
                         <small class="form-text text-danger"><?= form_error('soal'); ?></small>
                     </div>
                     <div class="form-group">
@@ -30,10 +28,11 @@
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
-                                    <input type="radio" name="is_true" aria-label="Radio button for following text input"  value='pilihan1' checked>
+                                    <input type="radio" name="is_true" aria-label="Radio button for following text input"  value='pilihan1' <?php if($answers[0]['is_true'] == '1') {echo('checked');} ?>>
                                 </div>
                             </div>
-                            <input type="text" class="form-control" id="pilihan1" name="pilihan1" value="<?= set_value('pilihan1'); ?>">
+                            <input type="hidden" class="form-control" id="pilihan1_id" name="pilihan1_id" value="<?= $answers[0]['answers_id']; ?>">
+                            <input type="text" class="form-control" id="pilihan1" name="pilihan1" value="<?= $answers[0]['text']; ?>">
                         </div>
                         <small class="form-text text-danger"><?= form_error('pilihan1'); ?></small>
                     </div>
@@ -42,10 +41,11 @@
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
-                                    <input type="radio" name="is_true" aria-label="Radio button for following text input" value='pilihan2'>
+                                    <input type="radio" name="is_true" aria-label="Radio button for following text input" value='pilihan2' <?php if($answers[1]['is_true'] == '1') {echo('checked');} ?>>
                                 </div>
                             </div>
-                            <input type="text" class="form-control" id="pilihan2" name="pilihan2" value="<?= set_value('pilihan2'); ?>">
+                            <input type="hidden" class="form-control" id="pilihan2_id" name="pilihan2_id" value="<?= $answers[1]['answers_id']; ?>">
+                            <input type="text" class="form-control" id="pilihan2" name="pilihan2" value="<?= $answers[1]['text']; ?>">
                         </div>
                         <small class="form-text text-danger"><?= form_error('pilihan2'); ?></small>
                     </div>
@@ -54,10 +54,11 @@
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
-                                    <input type="radio" name="is_true" aria-label="Radio button for following text input" value='pilihan3'>
+                                    <input type="radio" name="is_true" aria-label="Radio button for following text input" value='pilihan3' <?php if($answers[2]['is_true'] == '1') {echo('checked');} ?>>
                                 </div>
                             </div>
-                            <input type="text" class="form-control" id="pilihan3" name="pilihan3" value="<?= set_value('pilihan3'); ?>">
+                            <input type="hidden" class="form-control" id="pilihan3_id" name="pilihan3_id" value="<?= $answers[2]['answers_id']; ?>">
+                            <input type="text" class="form-control" id="pilihan3" name="pilihan3" value="<?= $answers[2]['text']; ?>">
                         </div>
                         <small class="form-text text-danger"><?= form_error('pilihan3'); ?></small>
                     </div>
@@ -66,10 +67,11 @@
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
-                                    <input type="radio" name="is_true" aria-label="Radio button for following text input" value='pilihan4'>
+                                    <input type="radio" name="is_true" aria-label="Radio button for following text input" value='pilihan4' <?php if($answers[3]['is_true'] == '1') {echo('checked');} ?>>
                                 </div>
                             </div>
-                            <input type="text" class="form-control" id="pilihan4" name="pilihan4" value="<?= set_value('pilihan4'); ?>">
+                            <input type="hidden" class="form-control" id="pilihan4_id" name="pilihan4_id" value="<?= $answers[3]['answers_id']; ?>">
+                            <input type="text" class="form-control" id="pilihan4" name="pilihan4" value="<?= $answers[3]['text']; ?>">
                            
                         </div>
                         <small class="form-text text-danger"><?= form_error('pilihan4'); ?></small>
@@ -79,23 +81,21 @@
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
-                                    <input type="radio" name="is_true" aria-label="Radio button for following text input" value='pilihan5'>
+                                    <input type="radio" name="is_true" aria-label="Radio button for following text input" value='pilihan5' <?php if($answers[4]['is_true'] == '1') {echo('checked');} ?>>
                                 </div>
                             </div>
-                            <input type="text" class="form-control" id="pilihan5" name="pilihan5" value="<?= set_value('pilihan5'); ?>">
+                            <input type="hidden" class="form-control" id="pilihan5_id" name="pilihan5_id" value="<?= $answers[4]['answers_id']; ?>">
+                            <input type="text" class="form-control" id="pilihan5" name="pilihan5" value="<?= $answers[4]['text']; ?>">
                            
                         </div>
                         <small class="form-text text-danger"><?= form_error('pilihan5'); ?></small>
                     </div>
                     <div class="form-group">
                         <label for="nama">Waktu (Menit)</label>
-                        <input type="number" class="form-control" id="waktu" name="waktu">
+                        <input type="number" class="form-control" id="waktu" name="waktu" value='<?= $question['time']; ?>'>
                         <small class="form-text text-danger"><?= form_error('waktu'); ?></small>
                     </div>
-
-
-
-                    <button class="btn btn-primary float-right" name="tambah" type="submit">Tambah</button>
+                    <button class="btn btn-primary float-right" name="tambah" type="submit">Ubah</button>
                 </form>
             </div>
         </div>

@@ -2,7 +2,7 @@
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-4 text-gray-800"><?= $title; ?>
+    <h1 class="h3 mb-4 text-gray-800"> <a href="<?= $parentUrl; ?>"><img class="pb-1 img-fluid" src="<?= base_url('assets/img/back32.png') ?>"> </a><?= $title; ?>
     </h1>
 
 </div>

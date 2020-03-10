@@ -6,4 +6,16 @@ class AnswersModel extends CI_Model
     {
         $this->db->insert_batch('answers', $data);
     }
+
+    public function getByQuestionsId($questionsId)
+    {
+        return $this->db->get_where('answers', [
+            'questions_id' => $questionsId
+        ])->result_array();
+    }
+
+    public function updateRows($answersData, $key)
+    {
+        $this->db->update_batch('answers', $answersData, $key);
+    }
 }

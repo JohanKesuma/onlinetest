@@ -60,6 +60,7 @@ class Admin extends CI_Controller
 
         $data['user'] = $this->UserModel->getByIdentityNumber(1001); // admin
         $data['title'] = 'Tambah Siswa';
+        $data['parentUrl'] = base_url('admin/daftarsiswa');
 
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
@@ -147,6 +148,7 @@ class Admin extends CI_Controller
         $data['user'] = $this->UserModel->getByIdentityNumber(1001);
         $data['questions'] = $this->QuestionsModel->getByPackageId($id);
         $data['title'] = $name;
+        $data['parentUrl'] = base_url('admin/paketsoal');
         $data['packageId'] = $id;
 
         $this->load->view('templates/header', $data);
@@ -165,6 +167,8 @@ class Admin extends CI_Controller
         $this->form_validation->set_rules('pilihan2', "Pilihan 2", 'required|trim');
         $this->form_validation->set_rules('pilihan3', "Pilihan 3", 'required|trim');
         $this->form_validation->set_rules('pilihan4', "Pilihan 4", 'required|trim');
+        $this->form_validation->set_rules('pilihan5', "Pilihan 5", 'required|trim');
+        $this->form_validation->set_rules('waktu', "waktu", 'required');
 
         if ($this->form_validation->run() == false) {
             $this->load->model('QuestPackagesModel');
@@ -173,7 +177,9 @@ class Admin extends CI_Controller
     
             $data['user'] = $this->UserModel->getByIdentityNumber(1001);
             $data['packageId'] = $packageId;
+            $data['parentUrl'] = base_url('admin/packagedetail/'.$packageId);
             $data['title'] = 'Tambah Soal ('.$name.')';
+
     
             $this->load->view('templates/header', $data);
             $this->load->view('templates/sidebar', $data);
@@ -183,6 +189,53 @@ class Admin extends CI_Controller
         } else {
             $this->load->model('QuestionsModel');
             $this->QuestionsModel->insert();
+            $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+            Soal ditambahkan.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>');
+            redirect('admin/tambahsoal/'.$packageId);
+        }
+    }
+
+    public function editSoal($question_id)
+    {
+        $this->load->library('form_validation');
+        
+
+        $this->form_validation->set_rules('soal', "Soal", 'required|trim');
+        $this->form_validation->set_rules('pilihan1', "Pilihan 1", 'required|trim');
+        $this->form_validation->set_rules('pilihan2', "Pilihan 2", 'required|trim');
+        $this->form_validation->set_rules('pilihan3', "Pilihan 3", 'required|trim');
+        $this->form_validation->set_rules('pilihan4', "Pilihan 4", 'required|trim');
+        $this->form_validation->set_rules('pilihan5', "Pilihan 5", 'required|trim');
+        $this->form_validation->set_rules('waktu', "waktu", 'required');
+
+        $this->load->model('QuestionsModel');
+        if ($this->form_validation->run() == false) {
+            $this->load->model('AnswersModel');
+            $data['user'] = $this->UserModel->getByIdentityNumber(1001);
+            $data['question'] = $this->QuestionsModel->getById($question_id);
+            $data['answers'] = $this->AnswersModel->getByQuestionsId($question_id);
+            $data['title'] = 'Edit Soal';
+            $data['parentUrl'] = base_url('admin/packagedetail/'.$data['question']['package_id']);
+
+    
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/sidebar', $data);
+            $this->load->view('templates/topbar', $data);
+            $this->load->view('admin/editsoal', $data);
+            $this->load->view('templates/footer');
+        } else {
+            $this->QuestionsModel->update($question_id);
+            $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+            Soal diubah.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>');
+            redirect('admin/editsoal/'.$question_id);
         }
     }
 }
