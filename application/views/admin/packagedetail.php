@@ -1,3 +1,4 @@
+<?= $this->session->flashdata('message'); ?>
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
@@ -23,11 +24,17 @@
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item" href="<?= base_url('/admin/editsoal/'.$q['questions_id']) ?>">Edit Soal</a>
-                            <a class="dropdown-item" href="#">Hapus</a>
+                            <a class="dropdown-item" href="<?= base_url('/admin/hapussoal/'.$q['package_id'].'/'.$q['questions_id']) ?>">Hapus</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-11">
+
+                    <?php if($q['image'] != '') : ?>
+                    <div class="mb-1">
+                    <img class="img-fluid" src="<?= base_url('assets/img/').$q['image']; ?>">
+                    </div>
+                    <?php endif; ?>
                     <?= $count.'. '.$q['text'] ?>
                     <?php foreach ($q['answers'] as $answers) : ?>
                     <div class="row ml-5">

@@ -17,7 +17,20 @@
                 Form Edit Soal
             </div>
             <div class="card-body">
-                <form action="" method="post">
+                <form action="" method="post" enctype="multipart/form-data">
+                
+                    <?php if($question['image'] != '') : ?>
+                    <div class="form-group d-flex justify-content-center">
+                        <div>
+                            <img class="img-fluid" src="<?= base_url('assets/img/').$question['image']; ?>" alt="">
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                    
+                    <div class="form-group">
+                        <label for="image">Pilih Gambar</label>
+                        <input type="file" class="form-control-file" id="question_image" name="question_image">
+                    </div>
                     <div class="form-group">
                         <label for="nama">Soal</label>
                         <textarea type="text" class="form-control" id="soal" name="soal" rows="6"><?= $question['text']; ?></textarea>

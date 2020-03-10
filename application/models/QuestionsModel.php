@@ -54,7 +54,7 @@ class QuestionsModel extends CI_Model
         ])->result_array();
     }
 
-    public function insert()
+    public function insert($imageFileName = '')
     {
         $packageId = $this->input->post('package_id');
         $text = $this->input->post('soal');
@@ -91,7 +91,8 @@ class QuestionsModel extends CI_Model
         $questionData = [
             'package_id' => $packageId,
             'text' => $text,
-            'time' => $time
+            'time' => $time,
+            'image' => $imageFileName
         ];
 
         $this->db->insert('questions', $questionData);
@@ -129,17 +130,30 @@ class QuestionsModel extends CI_Model
         $this->AnswersModel->insertRows($answersData);
     }
 
-    public function update($questions_id)
+    public function update($questions_id, $imageFileName = '')
     {
         $this->load->model('AnswersModel');
 
         $questionText = $this->input->post('soal');
         $time = $this->input->post('waktu');
 
+        
+
         $questionData = [
             'text' => $questionText,
             'time' => $time
         ];
+
+        if ($imageFileName != '') {
+            // ambil nama file sebelum di-update
+            $oldFileName = $this->getById($questions_id)['image'];
+            log_message('error', print_r($oldFileName, TRUE));
+            // delete file image sebelumnya
+            unlink('./assets/img/'.$oldFileName);
+            // update dengan yang baru
+            $questionData['image'] = $imageFileName;
+        }
+        
 
         $this->db->where('questions_id', $questions_id);
         $this->db->update('questions', $questionData);
@@ -168,7 +182,7 @@ class QuestionsModel extends CI_Model
                 'is_true' => $pilihan3
             ],
             [
-                'answers_id' => $this->input->post('pilihan4id'),
+                'answers_id' => $this->input->post('pilihan4_id'),
                 'text' => $this->input->post('pilihan4'),
                 'is_true' => $pilihan4
             ],

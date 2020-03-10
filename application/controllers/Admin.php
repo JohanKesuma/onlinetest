@@ -187,14 +187,37 @@ class Admin extends CI_Controller
             $this->load->view('admin/tambahsoal', $data);
             $this->load->view('templates/footer');
         } else {
-            $this->load->model('QuestionsModel');
-            $this->QuestionsModel->insert();
-            $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
-            Soal ditambahkan.
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-            </div>');
+            if (isset($_FILES['question_image'])  && $_FILES['question_image']['name'] != '') { // jika ada file yang di-upload
+                $fileName = date('Y_m_d-H-i-s').'_'.$_FILES['question_image']['name'];
+                $uploadReturn = $this->_doFileUpload($fileName, 'question_image');
+                if ($uploadReturn['uploaded'] == TRUE) {
+                    $this->load->model('QuestionsModel');
+                    $this->QuestionsModel->insert($uploadReturn['upload_data']['file_name']);
+                    $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                        Soal ditambahkan.
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>');
+                } else {
+                    $this->session->set_flashdata('message', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        Soal gagal ditambahkan. '.$uploadReturn['error'].'
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>');
+                }
+            } else {
+                $this->load->model('QuestionsModel');
+                $this->QuestionsModel->insert();
+                $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                    Soal ditambahkan.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>');
+            }
+            
             redirect('admin/tambahsoal/'.$packageId);
         }
     }
@@ -228,14 +251,91 @@ class Admin extends CI_Controller
             $this->load->view('admin/editsoal', $data);
             $this->load->view('templates/footer');
         } else {
+            if (isset($_FILES['question_image']) && $_FILES['question_image']['name'] != '') { // jika ada file yang di-upload
+                $fileName = date('Y_m_d-H-i-s').'_'.$_FILES['question_image']['name'];
+                $uploadReturn = $this->_doFileUpload($fileName, 'question_image');
+                if ($uploadReturn['uploaded'] == TRUE) {
+                    $this->load->model('QuestionsModel');
+                    $this->QuestionsModel->update($question_id, $uploadReturn['upload_data']['file_name']);
+                    $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                        Soal diubah.
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>');
+                } else {
+                    $this->session->set_flashdata('message', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        Soal gagal ditambahkan. '.$uploadReturn['error'].'
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>');
+                    log_message('error', print_r($_FILES, TRUE));
+                }
+            } else {
+                $this->load->model('QuestionsModel');
+                $this->QuestionsModel->update($question_id);
+                $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                    Soal diubah.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>');
+            }
             $this->QuestionsModel->update($question_id);
-            $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
-            Soal diubah.
+            
+            redirect('admin/editsoal/'.$question_id);
+        }
+    }
+
+    /**
+     *
+     * Upload gambar soal
+     *
+     */
+    private function _doFileUpload($fileName, $fieldName)
+    {
+        $config['upload_path']          = './assets/img/';
+        $config['allowed_types']        = 'gif|jpg|png';
+        $config['max_size']             = 0;
+        $config['max_width']            = 0;
+        $config['max_height']           = 0;
+        $config['file_name']            = $fileName;
+
+        $this->load->library('upload', $config);
+
+        if (! $this->upload->do_upload($fieldName)) {
+            $error = array('error' => $this->upload->display_errors());
+
+            return [
+                    'error' => $error['error'],
+                    'uploaded' => false
+                ];
+        } else {
+            $data = array('upload_data' => $this->upload->data());
+            log_message('error', print_r($data['upload_data'], TRUE));
+            return [
+                    'error' => '',
+                    'upload_data' => $data['upload_data'],
+                    'uploaded' => true
+                ];
+        }
+    }
+
+    public function hapusSoal($packageId, $questionId)
+    {
+        
+
+        $fileName = $this->db->get_where('questions', ['questions_id' => $questionId])->row_array()['image'];
+        unlink('./assets/img/'.$fileName);
+        $this->db->where('questions_id', $questionId);
+        $this->db->delete('questions');
+        $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+            Soal berhasil dihapus.
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
             </div>');
-            redirect('admin/editsoal/'.$question_id);
-        }
+        redirect('admin/packagedetail/'.$packageId);
     }
 }
