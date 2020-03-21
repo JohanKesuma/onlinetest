@@ -3,15 +3,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Admin extends CI_Controller
 {
+
+    private $user_id = null;
+
     public function __construct()
     {
         parent::__construct();
         $this->load->model('UserModel');
+        $this->user_id = $this->session->identity_number;
+        if (!$this->user_id || !$this->session->role == 0) {
+            redirect('auth');
+            exit;
+        }
     }
 
     public function index()
     {
-        $data['user'] = $this->UserModel->getByIdentityNumber(1001);
+        $data['user'] = $this->UserModel->getByIdentityNumber($this->user_id);
         $data['title'] = 'Dashboard';
 
         $this->load->view('templates/header', $data);
@@ -23,7 +31,7 @@ class Admin extends CI_Controller
     
     public function daftarSiswa()
     {
-        $data['user'] = $this->UserModel->getByIdentityNumber(1001);
+        $data['user'] = $this->UserModel->getByIdentityNumber($this->user_id);
         $data['title'] = 'Daftar Siswa';
         $data['daftarSiswa'] = $this->UserModel->getAll();
 
@@ -90,7 +98,7 @@ class Admin extends CI_Controller
 
         if ($this->form_validation->run() == false) {
             $data['siswa'] = $this->UserModel->getByIdentityNumber($nis);
-            $data['user'] = $this->UserModel->getByIdentityNumber(1001);
+            $data['user'] = $this->UserModel->getByIdentityNumber($this->user_id);
             $data['title'] = 'Ubah Siswa';
     
             $this->load->view('templates/header', $data);
@@ -127,7 +135,7 @@ class Admin extends CI_Controller
     {
         $this->load->model('QuestPackagesModel');
 
-        $data['user'] = $this->UserModel->getByIdentityNumber(1001);
+        $data['user'] = $this->UserModel->getByIdentityNumber($this->user_id);
         $data['questPackages'] = $this->QuestPackagesModel->getAll();
         $data['title'] = 'Soal';
 
@@ -145,7 +153,7 @@ class Admin extends CI_Controller
 
         $name = $this->QuestPackagesModel->getById($id)['name'];
 
-        $data['user'] = $this->UserModel->getByIdentityNumber(1001);
+        $data['user'] = $this->UserModel->getByIdentityNumber($this->user_id);
         $data['questions'] = $this->QuestionsModel->getByPackageId($id);
         $data['title'] = $name;
         $data['parentUrl'] = base_url('admin/paketsoal');
@@ -175,7 +183,7 @@ class Admin extends CI_Controller
 
             $name = $this->QuestPackagesModel->getById($packageId)['name'];
     
-            $data['user'] = $this->UserModel->getByIdentityNumber(1001);
+            $data['user'] = $this->UserModel->getByIdentityNumber($this->user_id);
             $data['packageId'] = $packageId;
             $data['parentUrl'] = base_url('admin/packagedetail/'.$packageId);
             $data['title'] = 'Tambah Soal ('.$name.')';
@@ -238,7 +246,7 @@ class Admin extends CI_Controller
         $this->load->model('QuestionsModel');
         if ($this->form_validation->run() == false) {
             $this->load->model('AnswersModel');
-            $data['user'] = $this->UserModel->getByIdentityNumber(1001);
+            $data['user'] = $this->UserModel->getByIdentityNumber($this->user_id);
             $data['question'] = $this->QuestionsModel->getById($question_id);
             $data['answers'] = $this->AnswersModel->getByQuestionsId($question_id);
             $data['title'] = 'Edit Soal';
