@@ -20,9 +20,11 @@ class Auth extends CI_Controller
 
         if ($this->form_validation->run() == false) {
             $data['title'] = "Login";
+            $data['package_id'] = $package_id;
 
             $this->load->view('auth/login', $data);
         } else {
+            echo('pack : '.$package_id);
             $this->_login($package_id);
         }
     }
@@ -52,13 +54,12 @@ class Auth extends CI_Controller
                     $questions = $this->QuestionsModel->getByPackageId($package_id);
                     if (!$questions) {
                         $this->_unsetUserData();
+                        // var_dump($package_id);
                         redirect('auth');
                         exit;
                     }
-                    $exam_data = [
-                        'questions' => $questions,
-                        'question_current_index' => 0
-                    ];
+
+                    $this->_createExam($questions, $nis, $package_id);
 
                     redirect('exam');
                 }
@@ -69,6 +70,37 @@ class Auth extends CI_Controller
                 redirect('auth');
             }
         }
+    }
+
+    private function _createExam($questions, $identity_number, $package_id)
+    {
+        $question_index = 0;
+
+        $this->load->model('ExamsModel');
+
+        // cek apakah user saat ini sedang melakukan ujian
+        $exam = $this->ExamsModel->getByIdentityNumber($identity_number);
+        if (!$exam) {  
+            /// jika belum. buat ujian di database
+            $firstQuestionTime = $questions[0]['time'];
+            $exam_data = [
+                'identity_number' => $identity_number,
+                'package_id' => $package_id,
+                'start_date' => date('Y-m-d H:i:s'),
+                'is_finished' => 0,
+                'next_timeout' => date("Y/m/d H:i:s", strtotime("+$firstQuestionTime minutes")),
+                'question_index' => 0 // mulai dengan soal pertama
+            ];
+            $this->ExamsModel->insert($exam_data);
+        } else {
+            $question_index = $exam['question_index'];
+        }
+
+        $exam_data = [
+            'questions' => $questions,
+            'question_index' => $question_index
+        ];
+        $this->session->set_userdata($exam_data);
     }
 
     public function logout()

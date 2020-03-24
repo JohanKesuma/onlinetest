@@ -46,7 +46,7 @@
                   </div>
                   <?= $this->session->flashdata('message'); ?>
                   <form class="user" method="post"
-                    action="<?= base_url('auth'); ?>">
+                    action="<?= base_url('auth/index/'.$package_id); ?>">
                     <div class="form-group">
                       <input type="text" class="form-control form-control-user" id="nis" name="nis"
                         placeholder="Enter Email Address..."
