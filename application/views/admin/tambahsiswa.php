@@ -1,3 +1,4 @@
+<?= $this->session->flashdata('message'); ?>
 <!-- Begin Page Content -->
 <div class="container-fluid">
 

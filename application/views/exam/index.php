@@ -1,10 +1,10 @@
-<div class="container">
+<div class="m-3">
 
-    <div class="row justify-content-center m-3">
+    <div class="row justify-content-center">
         <div class="col-sm-12">
             <div class="card shadow bg-primary text-white">
                 <div class="card-body">
-                    <p class="float-left">Soal <?= $questions_index + 1; ?>/10</p>
+                    <h4 class="float-left">Soal <?= $questions_index + 1; ?>/10</h4>
                     <h4 class="float-right">Waktu : <span id="time"></span>
                     </h4>
                 </div>
@@ -12,22 +12,24 @@
         </div>
     </div>
 
-    <div class="row justify-content-center my-3 mx-3">
+    <div class="row justify-content-center my-2">
         <div class="col-sm-12">
             <div class="card shadow" style="">
                 <div class="card-body">
                     <?php if ($questions[$questions_index]['image'] != '') : ?>
-                    <img src="<?= base_url('assets/img/'.$questions[$questions_index]['image']) ?>"
+                    <img class="img-fluit w-100" src="<?= base_url('assets/img/'.$questions[$questions_index]['image']) ?>"
                         alt="">
                     <?php endif; ?>
-                    <h5 class="card-title">Soal <?= $questions_index + 1; ?>
-                    </h5>
+                    <!-- <h5 class="card-title">Soal <?= $questions_index + 1; ?>
+                    </h5> -->
                     <p class="card-text"></p>
                     <div class="form-group">
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"
+                        <textarea class="form-control bg-white" id="exampleFormControlTextarea1" rows="6"
                             readonly><?= $questions[$questions_index]['text']; ?></textarea>
                     </div>
-                    <form action="<?= base_url('exam/next'); ?>" method="post">
+                    <form id='answer_form'
+                        action="<?= base_url('exam/next'); ?>"
+                        method="post">
                         <?php foreach ($questions[$questions_index]['answers'] as $key => $answers) : ?>
                         <div class="form-group">
                             <div class="input-group">
@@ -38,13 +40,16 @@
                                             value='<?= $answers['answers_id'] ?>'>
                                     </div>
                                 </div>
-                                <input type="text" class="form-control"
+                                <input readonly type="text" class="form-control bg-white"
                                     value="<?= $answers['text'] ?>">
                             </div>
                         </div>
                         <?php endforeach; ?>
-                        <button type="submit" class="btn btn-outline-primary float-right">Next</button>
-
+                        <?php if($questions_index == (count($questions) - 1)): ?>
+                        <button type="submit" class="btn btn-outline-primary float-right">Selesai</button>
+                        <?php else : ?>
+                            <button type="submit" class="btn btn-outline-primary float-right">Next</button>
+                        <?php endif; ?>
                     </form>
 
                 </div>
@@ -96,8 +101,13 @@
 
         function onTimeOut() {
             clearInterval(time);
-            // window.location.href = "<?= base_url('exam/next'); ?>"
+            var answer_form = $('#answer_form');
+
+            var inputs = answer_form.find("input");
+
+            inputs.prop("disabled", true);
+            answer_form.submit();
         }
     </script>
-
-</div>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js">
+        < /div>

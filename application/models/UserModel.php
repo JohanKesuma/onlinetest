@@ -31,9 +31,19 @@ class UserModel extends CI_Model
         return $this->db->get('user')->result_array();
     }
 
+    public function getAllJoinExamsJoinQuestPackage($role = 1)
+    {
+        $this->db->select('u.*, e.exam_id, e.question_index, e.true_answers, q.name as qname');
+        $this->db->join('exams e', 'e.identity_number=u.identity_number', 'left');
+        $this->db->join('quest_packages q', 'q.package_id=e.package_id', 'left');
+        $this->db->where([
+            'u.role' => $role
+            ]);
+        return $this->db->get('user u')->result_array();
+    }
+
     public function deleteById($user_id)
     {
-        
     }
 
     public function insert($role = 1)

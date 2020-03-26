@@ -8,10 +8,10 @@
 </div>
 <!-- /.container-fluid -->
 
-<div class="container-fluid mb-3">
-    <a href="<?= base_url('admin/tambahsiswa') ?>"
+<!-- <div class="container-fluid mb-3">
+    <a href="#"
         class="btn btn-primary mb-4">Tambah Soal</a>
-</div>
+</div> -->
 
 <div class="container">
 

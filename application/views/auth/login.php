@@ -42,14 +42,17 @@
               <div class="col-lg">
                 <div class="p-5">
                   <div class="text-center">
-                    <h1 class="h4 text-gray-900 mb-4">Login Page</h1>
+                    <h1 class="h4 text-gray-900 mb-1">Login</h1>
+                    <?php if(isset($package_name)): ?>
+                      <h2 class="mb-4"><?= $package_name; ?></h2>
+                    <?php endif; ?>
                   </div>
                   <?= $this->session->flashdata('message'); ?>
                   <form class="user" method="post"
                     action="<?= base_url('auth/index/'.$package_id); ?>">
                     <div class="form-group">
                       <input type="text" class="form-control form-control-user" id="nis" name="nis"
-                        placeholder="Enter Email Address..."
+                        placeholder="Masukkan NIS"
                         value="<?= set_value('nis'); ?>">
                       <?= form_error('nis', '<small class="text-danger pl-3">', '</small>'); ?>
                     </div>

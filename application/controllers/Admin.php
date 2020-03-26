@@ -42,6 +42,29 @@ class Admin extends CI_Controller
         $this->load->view('templates/footer');
     }
 
+    public function daftarNilai()
+    {
+        $data['user'] = $this->UserModel->getByIdentityNumber($this->user_id);
+        $data['title'] = 'Daftar Nilai Siswa';
+        $data['daftarSiswa'] = $this->UserModel->getAllJoinExamsJoinQuestPackage();
+        // var_dump($data['daftarSiswa']);
+        // exit;
+        foreach ($data['daftarSiswa'] as $key => $daftarSiswa) {
+            if ($daftarSiswa['exam_id']) {
+                $data['daftarSiswa'][$key]['nilai'] = $daftarSiswa['true_answers'] / $daftarSiswa['question_index'] * 100;
+            } else {
+                $data['daftarSiswa'][$key]['nilai'] = null;
+            }
+            
+        }
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('admin/daftarnilai', $data);
+        $this->load->view('templates/footer');
+    }
+
     public function tambahSiswa()
     {
         $this->load->library('form_validation');
@@ -57,7 +80,7 @@ class Admin extends CI_Controller
         if ($this->form_validation->run() == true) {
             $this->UserModel->insert();
             $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
-            Data siswa berhasil diubah.
+            Data siswa berhasil ditambahkan.
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -100,6 +123,7 @@ class Admin extends CI_Controller
             $data['siswa'] = $this->UserModel->getByIdentityNumber($nis);
             $data['user'] = $this->UserModel->getByIdentityNumber($this->user_id);
             $data['title'] = 'Ubah Siswa';
+            $data['parentUrl'] = base_url('admin/daftarsiswa');
     
             $this->load->view('templates/header', $data);
             $this->load->view('templates/sidebar', $data);
@@ -118,9 +142,9 @@ class Admin extends CI_Controller
         }
     }
 
-    public function hapusSiswa($user_id)
+    public function hapusSiswa($identity_number)
     {
-        $this->db->where('user_id', $user_id);
+        $this->db->where('identity_number', $identity_number);
         $this->db->delete('user');
         $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
             Data siswa berhasil dihapus.

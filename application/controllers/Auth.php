@@ -18,13 +18,18 @@ class Auth extends CI_Controller
         $this->form_validation->set_rules('nis', "NIS", 'required|trim');
         $this->form_validation->set_rules('password', 'Password', 'required');
 
+        $this->load->model('QuestPackagesModel');
+        $quest_package = $this->QuestPackagesModel->getById($package_id);
+        if ($quest_package) {
+            $data['package_name'] = $quest_package['name'];
+        }
+
         if ($this->form_validation->run() == false) {
             $data['title'] = "Login";
             $data['package_id'] = $package_id;
 
             $this->load->view('auth/login', $data);
         } else {
-            echo('pack : '.$package_id);
             $this->_login($package_id);
         }
     }
@@ -54,7 +59,9 @@ class Auth extends CI_Controller
                     $questions = $this->QuestionsModel->getByPackageId($package_id);
                     if (!$questions) {
                         $this->_unsetUserData();
-                        // var_dump($package_id);
+                        $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">
+                            Paket tidak sesuai.
+                            </div>');
                         redirect('auth');
                         exit;
                     }
@@ -80,7 +87,7 @@ class Auth extends CI_Controller
 
         // cek apakah user saat ini sedang melakukan ujian
         $exam = $this->ExamsModel->getByIdentityNumber($identity_number);
-        if (!$exam) {  
+        if (!$exam) {
             /// jika belum. buat ujian di database
             $firstQuestionTime = $questions[0]['time'];
             $exam_data = [
@@ -93,6 +100,14 @@ class Auth extends CI_Controller
             ];
             $this->ExamsModel->insert($exam_data);
         } else {
+            if ($exam['package_id'] != $package_id) {
+                $this->_unsetUserData();
+                $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">
+                    Paket tidak sesuai.
+                    </div>');
+                redirect('auth');
+                exit;
+            }
             $question_index = $exam['question_index'];
         }
 

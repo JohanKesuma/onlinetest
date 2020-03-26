@@ -38,7 +38,7 @@
             <span>Daftar Siswa</span></a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="<?= base_url('admin') ?>/daftarsiswa">
+        <a class="nav-link" href="<?= base_url('admin') ?>/daftarnilai">
             <i class="fas fa-fw fa-user"></i>
             <span>Daftar Nilai</span></a>
     </li>
