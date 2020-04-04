@@ -14,4 +14,33 @@ class QuestPackagesModel extends CI_Model
         ])->row_array();
     }
 
+    public function update($package_id)
+    {
+        $id = $this->input->post('package_id');
+        $name = $this->input->post('name');
+
+        $data = [
+            'package_id' => $id,
+            'name' => $name
+        ];
+
+        $this->db->where('package_id', $package_id);
+        $this->db->update('quest_packages', $data);
+        return $id;
+    }
+
+    public function insert()
+    {
+        $package_id = $this->input->post('package_id');
+        $name = $this->input->post('name');
+
+        $data = [
+            'package_id' =>$package_id,
+            'name' => $name
+        ];
+
+        $this->db->insert('quest_packages', $data);
+        return $this->db->insert_id();
+    }
+
 }

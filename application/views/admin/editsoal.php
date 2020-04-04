@@ -25,6 +25,7 @@
                             <img class="img-fluid" src="<?= base_url('assets/img/').$question['image']; ?>" alt="">
                         </div>
                     </div>
+                    <a href="<?= base_url('question/hapusgambar/'.$question['questions_id']) ?>"><button type="button" class="btn btn-outline-danger mb-4">Hapus Gambar</button></a>
                     <?php endif; ?>
                     
                     <div class="form-group">

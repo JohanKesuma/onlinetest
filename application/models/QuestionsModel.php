@@ -203,4 +203,21 @@ class QuestionsModel extends CI_Model
         }
         return 0;
     }
+
+    public function deleteImage($questions_id)
+    {
+        // hapus image di database
+        $this->db->where('questions_id', $questions_id);
+        $this->db->update('questions', [
+            'image' => ''
+        ]);
+
+        // hapus image di storage
+        $imageFileName = $this->getById($questions_id)['image'];
+        if ($imageFileName != '') {
+            log_message('error', print_r($oldFileName, TRUE));
+            // delete file image sebelumnya
+            unlink('./assets/img/'.$imageFileName);
+        }
+    }
 }

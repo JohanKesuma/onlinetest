@@ -33,9 +33,11 @@ class UserModel extends CI_Model
 
     public function getAllJoinExamsJoinQuestPackage($role = 1)
     {
-        $this->db->select('u.*, e.exam_id, e.question_index, e.true_answers, q.name as qname');
+        $this->db->select('u.*, e.exam_id, e.question_index, e.true_answers, q.name as qname, count(qs.questions_id) as jumlah_soal');
         $this->db->join('exams e', 'e.identity_number=u.identity_number', 'left');
         $this->db->join('quest_packages q', 'q.package_id=e.package_id', 'left');
+        $this->db->join('questions qs', 'qs.package_id=e.package_id', 'left');
+        $this->db->group_by('u.identity_number');
         $this->db->where([
             'u.role' => $role
             ]);
@@ -76,6 +78,16 @@ class UserModel extends CI_Model
         $data = [
             'identity_number' => $number,
             'name' => $name
+        ];
+
+        $this->db->where('identity_number', $identity_number);
+        $this->db->update('user', $data);
+    }
+
+    public function updatePassword($identity_number, $password)
+    {
+        $data = [
+            'password' => password_hash($password, PASSWORD_DEFAULT)
         ];
 
         $this->db->where('identity_number', $identity_number);

@@ -19,7 +19,8 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item">
-        <a class="nav-link" href="<?= base_url('admin'); ?>">
+        <a class="nav-link"
+            href="<?= base_url('admin'); ?>">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
     </li>
@@ -33,12 +34,14 @@
     </div>
 
     <li class="nav-item">
-        <a class="nav-link" href="<?= base_url('admin') ?>/daftarsiswa">
+        <a class="nav-link"
+            href="<?= base_url('admin') ?>/daftarsiswa">
             <i class="fas fa-fw fa-user"></i>
             <span>Daftar Siswa</span></a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="<?= base_url('admin') ?>/daftarnilai">
+        <a class="nav-link"
+            href="<?= base_url('admin') ?>/daftarnilai">
             <i class="fas fa-fw fa-user"></i>
             <span>Daftar Nilai</span></a>
     </li>
@@ -52,7 +55,8 @@
     </div>
 
     <li class="nav-item">
-        <a class="nav-link" href="<?= base_url('admin') ?>/paketsoal">
+        <a class="nav-link"
+            href="<?= base_url('admin') ?>/paketsoal">
             <i class="fas fa-fw fa-user"></i>
             <span>Paket Soal</span></a>
     </li>
@@ -61,8 +65,7 @@
     <hr class="sidebar-divider">
 
     <li class="nav-item">
-        <a class="nav-link"
-            href="<?= base_url('auth/logout'); ?>">
+        <a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal">
             <i class="fas fa-fw fa-sign-out-alt"></i>
             <span>Logout</span></a>
     </li>

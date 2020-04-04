@@ -17,24 +17,23 @@
 
         <div class="card">
             <div class="card-header">
-                Form Ubah Siswa
+                Form Tambah Paket
             </div>
             <div class="card-body">
                 <form action="" method="post">
                     <div class="form-group">
-                        <label for="nama">Nomor Induk Siswa</label>
-                        <input type="text" class="form-control" id="nis" name="nis"
-                            value="<?= $siswa['identity_number']; ?>">
-                        <small class="form-text text-danger"><?= form_error('nis'); ?></small>
+                        <label for="nama">ID Paket</label>
+                        <input type="text" class="form-control" id="package_id" name="package_id"
+                            value="<?= set_value('package_id'); ?>">
+                        <small class="form-text text-danger"><?= form_error('package_id'); ?></small>
                     </div>
                     <div class="form-group">
-                        <label for="nama">Nama</label>
+                        <label for="nama">Nama Paket</label>
                         <input type="text" class="form-control" id="name" name="name"
-                            value="<?= $siswa['name']; ?>">
+                            value="<?= set_value('name'); ?>">
                         <small class="form-text text-danger"><?= form_error('name'); ?></small>
                     </div>
-                    <button class="btn btn-primary float-right" name="tambah" type="submit">Ubah</button>
-                    <a class="btn btn-primary float-right mr-2 text-white" href="<?= base_url('admin/resetpassword/'.$siswa['identity_number']) ?>">Reset Password</a>
+                    <button class="btn btn-primary float-right" name="tambah" type="submit">Tambah</button>
                 </form>
             </div>
         </div>

@@ -3,7 +3,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Admin extends CI_Controller
 {
-
     private $user_id = null;
 
     public function __construct()
@@ -51,11 +50,10 @@ class Admin extends CI_Controller
         // exit;
         foreach ($data['daftarSiswa'] as $key => $daftarSiswa) {
             if ($daftarSiswa['exam_id']) {
-                $data['daftarSiswa'][$key]['nilai'] = $daftarSiswa['true_answers'] / $daftarSiswa['question_index'] * 100;
+                $data['daftarSiswa'][$key]['nilai'] = $daftarSiswa['true_answers'] / $daftarSiswa['jumlah_soal'] * 100;
             } else {
                 $data['daftarSiswa'][$key]['nilai'] = null;
             }
-            
         }
 
         $this->load->view('templates/header', $data);
@@ -155,18 +153,136 @@ class Admin extends CI_Controller
         redirect('admin/daftarsiswa');
     }
 
+    /**
+     *
+     * Controller Reset Password siswa
+     *
+     * Post : Password 1 dan password 2
+     */
+    public function resetPassword($identity_number)
+    {
+        $this->load->library('form_validation');
+
+        $this->form_validation->set_rules('password1', 'Password', 'required|trim|min_length[3]|matches[password2]', [
+            'matches' => "Password tidak cocok.",
+            'min_length' => 'Password minimal 3 huruf.'
+        ]);
+        $this->form_validation->set_rules('password2', 'Password', 'required|trim|matches[password1]', [
+            'matches' => "Password tidak cocok."
+        ]);
+
+        if ($this->form_validation->run() == true) {
+            $password = $this->input->post('password1');
+            $this->UserModel->updatePassword($identity_number, $password);
+            $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+            Password berhasil diubah.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>');
+            redirect('admin/ubahsiswa/'.$identity_number);
+            return;
+        }
+
+        $siswa = $this->UserModel->getByIdentityNumber($identity_number);
+
+        $data['siswa'] = $siswa;
+        $data['user'] = $this->UserModel->getByIdentityNumber($this->user_id);
+        $data['title'] = 'Reset Password '. $siswa['name'];
+        $data['parentUrl'] = base_url('admin/ubahsiswa/'.$identity_number);
+    
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('admin/resetpassword', $data);
+        $this->load->view('templates/footer');
+    }
+
     public function paketSoal()
     {
         $this->load->model('QuestPackagesModel');
 
         $data['user'] = $this->UserModel->getByIdentityNumber($this->user_id);
         $data['questPackages'] = $this->QuestPackagesModel->getAll();
-        $data['title'] = 'Soal';
+        $data['title'] = 'Paket Soal';
 
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar', $data);
         $this->load->view('admin/paketsoal', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function tambahPaket()
+    {
+        $this->load->library('form_validation');
+
+        $this->form_validation->set_rules('package_id', "ID Paket", 'required|trim|is_unique[quest_packages.package_id]', [
+            'required' => 'ID Paket tidak boleh kosong'
+        ]);
+        $this->form_validation->set_rules('name', "Nama", 'required|trim', [
+            'required' => 'Nama Paket tidak boleh kosong'
+        ]);
+
+        $this->load->model('QuestPackagesModel');
+
+        if ($this->form_validation->run() == TRUE) {
+            $id = $this->QuestPackagesModel->insert();
+            $package_id = $id;
+            $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+            Paket berhasil ditambahkan.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>');
+            redirect('admin/paketsoal');
+            return;
+        }
+
+        $data['user'] = $this->UserModel->getByIdentityNumber($this->user_id);
+        $data['title'] = 'Tambah Paket Soal';
+        $data['parentUrl'] = base_url('admin/paketsoal');
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('admin/tambahpaket', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function editPaket($package_id)
+    {
+        $this->load->library('form_validation');
+
+        $this->form_validation->set_rules('package_id', "ID Paket", 'required|trim|is_unique[quest_packages.package_id]', [
+            'required' => 'ID Paket tidak boleh kosong'
+        ]);
+        $this->form_validation->set_rules('name', "Nama", 'required|trim', [
+            'required' => 'Nama Paket tidak boleh kosong'
+        ]);
+
+        $this->load->model('QuestPackagesModel');
+
+        if ($this->form_validation->run() == TRUE) {
+            $id = $this->QuestPackagesModel->update($package_id);
+            $package_id = $id;
+            $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+            Paket berhasil diubah.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>');
+        }
+
+        $data['user'] = $this->UserModel->getByIdentityNumber($this->user_id);
+        $data['questPackage'] = $this->QuestPackagesModel->getById($package_id);
+        $data['title'] = 'Edit Paket';
+        $data['parentUrl'] = base_url('admin/paketsoal');
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('admin/editpaket', $data);
         $this->load->view('templates/footer');
     }
 
@@ -195,11 +311,22 @@ class Admin extends CI_Controller
         $this->load->library('form_validation');
 
         $this->form_validation->set_rules('soal', "Soal", 'required|trim');
-        $this->form_validation->set_rules('pilihan1', "Pilihan 1", 'required|trim');
-        $this->form_validation->set_rules('pilihan2', "Pilihan 2", 'required|trim');
-        $this->form_validation->set_rules('pilihan3', "Pilihan 3", 'required|trim');
-        $this->form_validation->set_rules('pilihan4', "Pilihan 4", 'required|trim');
-        $this->form_validation->set_rules('pilihan5', "Pilihan 5", 'required|trim');
+        $this->form_validation->set_rules('pilihan1', "Pilihan 1", 'required|trim', [
+            'required' => 'Pilihan 1 harus diisi'
+        ]);
+        $this->form_validation->set_rules('pilihan2', "Pilihan 2", 'required|trim', [
+            'required' => 'Pilihan 2 harus diisi'
+        ]);
+        $this->form_validation->set_rules('pilihan3', "Pilihan 3", 'required|trim', [
+            'required' => 'Pilihan 3 harus diisi'
+        ]);
+        $this->form_validation->set_rules('pilihan4', "Pilihan 4", 'required|trim', [
+            'required' => 'Pilihan 4 harus diisi'
+        ]);
+        $this->form_validation->set_rules('pilihan5', "Pilihan 5", 'required|trim', [
+            'required' => 'Pilihan 5 harus diisi'
+        ]);
+
         $this->form_validation->set_rules('waktu', "waktu", 'required');
 
         if ($this->form_validation->run() == false) {
@@ -222,7 +349,7 @@ class Admin extends CI_Controller
             if (isset($_FILES['question_image'])  && $_FILES['question_image']['name'] != '') { // jika ada file yang di-upload
                 $fileName = date('Y_m_d-H-i-s').'_'.$_FILES['question_image']['name'];
                 $uploadReturn = $this->_doFileUpload($fileName, 'question_image');
-                if ($uploadReturn['uploaded'] == TRUE) {
+                if ($uploadReturn['uploaded'] == true) {
                     $this->load->model('QuestionsModel');
                     $this->QuestionsModel->insert($uploadReturn['upload_data']['file_name']);
                     $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -286,7 +413,7 @@ class Admin extends CI_Controller
             if (isset($_FILES['question_image']) && $_FILES['question_image']['name'] != '') { // jika ada file yang di-upload
                 $fileName = date('Y_m_d-H-i-s').'_'.$_FILES['question_image']['name'];
                 $uploadReturn = $this->_doFileUpload($fileName, 'question_image');
-                if ($uploadReturn['uploaded'] == TRUE) {
+                if ($uploadReturn['uploaded'] == true) {
                     $this->load->model('QuestionsModel');
                     $this->QuestionsModel->update($question_id, $uploadReturn['upload_data']['file_name']);
                     $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -302,7 +429,7 @@ class Admin extends CI_Controller
                         <span aria-hidden="true">&times;</span>
                         </button>
                         </div>');
-                    log_message('error', print_r($_FILES, TRUE));
+                    log_message('error', print_r($_FILES, true));
                 }
             } else {
                 $this->load->model('QuestionsModel');
@@ -345,7 +472,7 @@ class Admin extends CI_Controller
                 ];
         } else {
             $data = array('upload_data' => $this->upload->data());
-            log_message('error', print_r($data['upload_data'], TRUE));
+            log_message('error', print_r($data['upload_data'], true));
             return [
                     'error' => '',
                     'upload_data' => $data['upload_data'],
@@ -356,8 +483,6 @@ class Admin extends CI_Controller
 
     public function hapusSoal($packageId, $questionId)
     {
-        
-
         $fileName = $this->db->get_where('questions', ['questions_id' => $questionId])->row_array()['image'];
         unlink('./assets/img/'.$fileName);
         $this->db->where('questions_id', $questionId);
@@ -370,4 +495,18 @@ class Admin extends CI_Controller
             </div>');
         redirect('admin/packagedetail/'.$packageId);
     }
+
+    public function hapusPaket($package_id)
+    {
+        $this->db->where('package_id', $package_id);
+        $this->db->delete('quest_packages');
+        $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+            Paket berhasil dihapus.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>');
+        redirect('admin/paketsoal/');
+    }
+
 }

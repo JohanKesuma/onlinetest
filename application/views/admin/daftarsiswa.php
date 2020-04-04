@@ -50,7 +50,7 @@
     </table>
 </div>
 
-<!-- Logout Modal-->
+<!-- Hapus Modal-->
 <div class="modal fade" id="hapusModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -73,5 +73,6 @@
             console.log(url);
             $('#hapusButton').attr('href', url); // ganti value href
         });
+        
     }
 </script>

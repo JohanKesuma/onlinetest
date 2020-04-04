@@ -70,6 +70,7 @@
                         <div class="col-sm-12">
 
                             <?php foreach ($answers_history as $answer): ?>
+                            <?php if (!isset($answer['user_answer_id'])){ $answer['user_answer_id'] = NULL; } ?>
                             <?php $index = array_search($answer['user_answer_id'], array_column($answer['answers'], 'answers_id')); ?>
                             <?php if ($answer['answers'][$index]['is_true'] == 0 || $answer['user_answer_id'] == null): ?>
                             <div class="row mb-3">

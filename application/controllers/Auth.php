@@ -15,8 +15,12 @@ class Auth extends CI_Controller
     {
 
         // Form Validation
-        $this->form_validation->set_rules('nis', "NIS", 'required|trim');
-        $this->form_validation->set_rules('password', 'Password', 'required');
+        $this->form_validation->set_rules('nis', "NIS", 'required|trim', [
+            'required' => 'NIS harus diisi'
+        ]);
+        $this->form_validation->set_rules('password', 'Password', 'required', [
+            'required' => 'Password harus diisi'
+        ]);
 
         $this->load->model('QuestPackagesModel');
         $quest_package = $this->QuestPackagesModel->getById($package_id);
@@ -62,7 +66,7 @@ class Auth extends CI_Controller
                         $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">
                             Paket tidak sesuai.
                             </div>');
-                        redirect('auth');
+                        redirect('auth/index/'.$package_id);
                         exit;
                     }
 
