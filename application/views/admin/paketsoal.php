@@ -28,6 +28,11 @@
                 <img src="<?= base_url('assets/img/soal-bg.jpg') ?>"
                     class="card-img-top">
                 <div class="card-body">
+                    <?php if ($q['is_active'] == 1): ?>
+                        <h5 class="card-title text-success float-right">Open</h5>
+                    <?php else : ?>
+                        <h5 class="card-title text-danger float-right">Close</h5>
+                    <?php endif; ?>
                     <h5 class="card-title"><?= $q['name'] ?>
                     </h5>
 
@@ -39,6 +44,13 @@
                                     Edit
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <?php if ($q['is_active'] == 1): ?>
+                                    <a href="<?= base_url('admin/togglePackage/'.$q['package_id'].'/0') ?>"
+                                        class="dropdown-item">Tutup paket</a>
+                                <?php else : ?>
+                                    <a href="<?= base_url('admin/togglePackage/'.$q['package_id'].'/1') ?>"
+                                        class="dropdown-item">Buka paket</a>
+                                <?php endif; ?>
                                     <a href="<?= base_url('admin/editpaket/'.$q['package_id']); ?>"
                                         class="dropdown-item">Edit</a>
                                     <a href="javascript:downloadQrCode('https://api.qrserver.com/v1/create-qr-code/?data=<?= base_url('auth/index/'.$q['package_id']); ?>&size=512x512','<?= $q['name']; ?>')"

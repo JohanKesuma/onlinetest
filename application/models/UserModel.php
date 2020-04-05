@@ -31,10 +31,10 @@ class UserModel extends CI_Model
         return $this->db->get('user')->result_array();
     }
 
-    public function getAllJoinExamsJoinQuestPackage($role = 1)
+    public function getAllJoinExamsJoinQuestPackage($package_id, $role = 1)
     {
-        $this->db->select('u.*, e.exam_id, e.question_index, e.true_answers, q.name as qname, count(qs.questions_id) as jumlah_soal');
-        $this->db->join('exams e', 'e.identity_number=u.identity_number', 'left');
+        $this->db->select('u.identity_number, u.name, e.exam_id, e.question_index, e.true_answers, q.name as qname, count(qs.questions_id) as jumlah_soal');
+        $this->db->join('exams e', 'e.identity_number=u.identity_number AND e.package_id='.$package_id, 'left');
         $this->db->join('quest_packages q', 'q.package_id=e.package_id', 'left');
         $this->db->join('questions qs', 'qs.package_id=e.package_id', 'left');
         $this->db->group_by('u.identity_number');

@@ -43,11 +43,32 @@ class Admin extends CI_Controller
 
     public function daftarNilai()
     {
+        $this->load->model('QuestPackagesModel');
+
         $data['user'] = $this->UserModel->getByIdentityNumber($this->user_id);
         $data['title'] = 'Daftar Nilai Siswa';
-        $data['daftarSiswa'] = $this->UserModel->getAllJoinExamsJoinQuestPackage();
-        // var_dump($data['daftarSiswa']);
-        // exit;
+        $data['questPackages'] = $this->QuestPackagesModel->getAll();
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('admin/daftarnilai', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function detailNilai($package_id)
+    {
+        $data['user'] = $this->UserModel->getByIdentityNumber($this->user_id);
+        
+        $data['parentUrl'] = base_url('admin/daftarnilai');
+        $data['daftarSiswa'] = $this->UserModel->getAllJoinExamsJoinQuestPackage($package_id);
+        
+
+        if (!$data['daftarSiswa']) {
+            redirect('admin/daftarnilai');
+            return;
+        }
+        $data['title'] = 'Daftar Nilai '.$data['daftarSiswa'][0]['qname'];
         foreach ($data['daftarSiswa'] as $key => $daftarSiswa) {
             if ($daftarSiswa['exam_id']) {
                 $data['daftarSiswa'][$key]['nilai'] = $daftarSiswa['true_answers'] / $daftarSiswa['jumlah_soal'] * 100;
@@ -59,7 +80,7 @@ class Admin extends CI_Controller
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar', $data);
-        $this->load->view('admin/daftarnilai', $data);
+        $this->load->view('admin/detailnilai', $data);
         $this->load->view('templates/footer');
     }
 
@@ -226,7 +247,7 @@ class Admin extends CI_Controller
 
         $this->load->model('QuestPackagesModel');
 
-        if ($this->form_validation->run() == TRUE) {
+        if ($this->form_validation->run() == true) {
             $id = $this->QuestPackagesModel->insert();
             $package_id = $id;
             $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -263,7 +284,7 @@ class Admin extends CI_Controller
 
         $this->load->model('QuestPackagesModel');
 
-        if ($this->form_validation->run() == TRUE) {
+        if ($this->form_validation->run() == true) {
             $id = $this->QuestPackagesModel->update($package_id);
             $package_id = $id;
             $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -509,4 +530,14 @@ class Admin extends CI_Controller
         redirect('admin/paketsoal/');
     }
 
+    public function togglePackage($package_id, $active=0)
+    {
+        $this->db->where('package_id', $package_id);
+        $this->db->update('quest_packages', [
+            'is_active' => $active
+        ]);
+        
+
+        redirect('admin/paketsoal');
+    }
 }

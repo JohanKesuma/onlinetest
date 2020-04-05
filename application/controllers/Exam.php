@@ -25,7 +25,8 @@ class Exam extends CI_Controller
         $data['questions'] = $this->session->questions;
         $data['questions_index'] = $this->session->question_index;
 
-        $exam = $this->ExamsModel->getByIdentityNumber($this->session->identity_number);
+        $package_id = $questions = $this->session->questions[0]['package_id'];
+        $exam = $this->ExamsModel->getByIdentityNumber($this->session->identity_number, $package_id);
 
         if ($exam['is_finished'] == 1) {
             redirect('/exam/result');
@@ -50,7 +51,8 @@ class Exam extends CI_Controller
 
     public function next()
     {
-        $exam = $this->ExamsModel->getByIdentityNumber($this->session->identity_number);
+        $package_id = $questions = $this->session->questions[0]['package_id'];
+        $exam = $this->ExamsModel->getByIdentityNumber($this->session->identity_number, $package_id);
         if ($exam['is_finished'] == 1) {
             redirect('exam/restult');
         }
@@ -114,7 +116,8 @@ class Exam extends CI_Controller
 
     public function result()
     {
-        $exam = $this->ExamsModel->getByIdentityNumber($this->user_id);
+        $package_id = $questions = $this->session->questions[0]['package_id'];
+        $exam = $this->ExamsModel->getByIdentityNumber($this->user_id, $package_id);
         if (!$exam) { // jika user belum ujian
             redirect('exam');
         }

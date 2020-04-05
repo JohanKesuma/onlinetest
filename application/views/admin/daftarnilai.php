@@ -9,35 +9,18 @@
 </div>
 <!-- /.container-fluid -->
 
-<div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">No.</th>
-                <th scope="col">Nomor Induk Siswa</th>
-                <th scope="col">Nama</th>
-                <th scope="col">Paket Soal</th>
-                <th scope="col">Nilai</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php $no = 1; ?>
-            <?php foreach ($daftarSiswa as $ds): ?>
-            <tr>
-                <th scope="row"><?= $no; ?>
-                </th>
-                <td><?= $ds['identity_number']; ?>
-                </td>
-                <td><?= $ds['name']; ?>
-                </td>
-                <td>
-                <?= $ds['qname'] ?>
-                </td>
-                <td>
-                    <?= $ds['nilai']; ?>
-                </td>
-            </tr>
-            <?php $no++; endforeach; ?>
-        </tbody>
-    </table>
+<div class="row mx-3">
+
+    <div class="col">
+        <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action active">
+                Pilih Paket
+            </a>
+            <?php foreach($questPackages as $q): ?>
+                <a href="<?= base_url('admin/detailnilai/'.$q['package_id']); ?>" class="list-group-item list-group-item-action"><?= $q['name']; ?></a>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
 </div>
+

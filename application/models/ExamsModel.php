@@ -8,10 +8,11 @@ class ExamsModel extends CI_Model
         return $this->db->insert_id();
     }
 
-    public function getByIdentityNumber($identityNumber)
+    public function getByIdentityNumber($identityNumber, $package_id)
     {
         return $this->db->get_where('exams', [
-            'identity_number' => $identityNumber
+            'identity_number' => $identityNumber,
+            'package_id' => $package_id
         ])->row_array();
     }
 

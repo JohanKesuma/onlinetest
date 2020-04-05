@@ -24,8 +24,10 @@ class Auth extends CI_Controller
 
         $this->load->model('QuestPackagesModel');
         $quest_package = $this->QuestPackagesModel->getById($package_id);
+        $is_active = 0;
         if ($quest_package) {
             $data['package_name'] = $quest_package['name'];
+            $is_active = $quest_package['is_active'];
         }
 
         if ($this->form_validation->run() == false) {
@@ -34,11 +36,11 @@ class Auth extends CI_Controller
 
             $this->load->view('auth/login', $data);
         } else {
-            $this->_login($package_id);
+            $this->_login($package_id, $is_active);
         }
     }
     
-    private function _login($package_id="")
+    private function _login($package_id="", $is_active)
     {
         $nis = $this->input->post('nis');
         $password = $this->input->post('password');
@@ -70,6 +72,14 @@ class Auth extends CI_Controller
                         exit;
                     }
 
+                    if ($is_active == 0) {
+                        $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">
+                            Paket belum dibuka atau sudah selesai.
+                            </div>');
+                        redirect('auth/index/'.$package_id);
+                        return;
+                    }
+
                     $this->_createExam($questions, $nis, $package_id);
 
                     redirect('exam');
@@ -78,7 +88,7 @@ class Auth extends CI_Controller
                 $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">
                         Password Salah!
                         </div>');
-                redirect('auth');
+                redirect('auth/index/'.$package_id);
             }
         }
     }
@@ -90,7 +100,7 @@ class Auth extends CI_Controller
         $this->load->model('ExamsModel');
 
         // cek apakah user saat ini sedang melakukan ujian
-        $exam = $this->ExamsModel->getByIdentityNumber($identity_number);
+        $exam = $this->ExamsModel->getByIdentityNumber($identity_number, $package_id);
         if (!$exam) {
             /// jika belum. buat ujian di database
             $firstQuestionTime = $questions[0]['time'];
