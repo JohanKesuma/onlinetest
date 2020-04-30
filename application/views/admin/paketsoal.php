@@ -37,7 +37,7 @@
                     </h5>
 
                     <div class="row">
-                        <div class="col-sm-2 mr-3">
+                        <div class="col-sm-2 mr-3 mb-1">
                             <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

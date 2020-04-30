@@ -4,7 +4,7 @@
         <div class="col-sm-12">
             <div class="card shadow bg-primary text-white">
                 <div class="card-body">
-                    <h4 class="float-left">Soal <?= $questions_index + 1; ?>/10</h4>
+                    <h4 class="float-left">Soal <?= $questions_index + 1; ?>/<?= count($questions) ?></h4>
                     <h4 class="float-right">Waktu : <span id="time"></span>
                     </h4>
                 </div>
@@ -17,15 +17,21 @@
             <div class="card shadow" style="">
                 <div class="card-body">
                     <?php if ($questions[$questions_index]['image'] != '') : ?>
-                    <img class="img-fluit w-100" src="<?= base_url('assets/img/'.$questions[$questions_index]['image']) ?>"
+                    <div style="overflow-x: auto; white-space: nowrap;">
+                    <img style="min-width: 500px;" class="img-fluit w-100" src="<?= base_url('assets/img/'.$questions[$questions_index]['image']) ?>"
                         alt="">
+                    </div>
+                    
                     <?php endif; ?>
                     <!-- <h5 class="card-title">Soal <?= $questions_index + 1; ?>
                     </h5> -->
                     <p class="card-text"></p>
                     <div class="form-group">
-                        <textarea class="form-control bg-white" id="exampleFormControlTextarea1" rows="6"
-                            readonly><?= $questions[$questions_index]['text']; ?></textarea>
+                        <div class="p-2" style="border: 1px solid rgba(0, 0, 0, .2); border-radius: 5px;min-height: 100px;">
+                            <?= $questions[$questions_index]['text']; ?>
+                        </div>
+                        <!-- <textarea class="form-control bg-white" id="exampleFormControlTextarea1" rows="6"
+                            readonly><?= $questions[$questions_index]['text']; ?></textarea> -->
                     </div>
                     <form id='answer_form'
                         action="<?= base_url('exam/next'); ?>"

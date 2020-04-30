@@ -77,8 +77,18 @@
                                 <div class="col-sm-12">
                                     <div class="card shadow">
                                         <div class="card-body justify-content-center">
-                                            <textarea class='form-control' rows="6"
-                                                readonly><?= $answer['text'] ?></textarea>
+                                            <?php if ($answer['image'] != '') : ?>
+                                                <div style="overflow-x: auto; white-space: nowrap;">
+                                                <img style="min-width: 500px;" class="img-fluit w-100" src="<?= base_url('assets/img/'.$answer['image']) ?>"
+                                                    alt="">
+                                                </div>
+                                            
+                                            <?php endif; ?>
+                                            <div class="p-2" style="border: 1px solid rgba(0, 0, 0, .2); border-radius: 5px;min-height: 100px;">
+                                                <?= $answer['text'] ?>
+                                            </div>
+                                            <!-- <textarea class='form-control' rows="6"
+                                                readonly></textarea> -->
                                             <?php foreach ($answer['answers'] as $a): ?>
                                             <div class="card <?php if ($a['is_true'] == 1) {
     echo 'bg-success';

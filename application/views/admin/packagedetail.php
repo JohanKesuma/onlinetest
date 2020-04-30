@@ -21,7 +21,7 @@
             <div class="row">
                 <div class="col-sm-0">
                     <div class="dropdown">
-                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
+                        <button class="mb-1 btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Edit
                         </button>
@@ -38,12 +38,16 @@
                 <div class="col-sm-11">
 
                     <?php if ($q['image'] != '') : ?>
-                    <div class="mb-1">
-                        <img class="img-fluid"
+                    <div class="mb-1" style="overflow-x: auto; white-space: nowrap;">
+                        <img class="img-fluid" style="min-width: 500px;"
                             src="<?= base_url('assets/img/').$q['image']; ?>">
                     </div>
                     <?php endif; ?>
-                    <?= $count.'. '.$q['text'] ?>
+                    <div class="p-2" style="border: 1px solid rgba(0, 0, 0, .2); border-radius: 5px;min-height: 100px;">
+                        <?= $count.'. '.$q['text'] ?>
+                    </div>
+                    <!-- <textarea rows="6" class="form-control" readonly><?= $count.'. '.$q['text'] ?></textarea> -->
+                    
                     <?php foreach ($q['answers'] as $answers) : ?>
                     <div class="row ml-5">
                         <p><?= $answers['text']; ?>

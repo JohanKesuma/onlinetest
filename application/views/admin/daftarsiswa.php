@@ -14,7 +14,7 @@
         class="btn btn-primary mb-4">Tambah Siswa</a>
 </div>
 
-<div>
+<div style="overflow-x: auto; white-space: nowrap;">
     <table class="table">
         <thead>
             <tr>
