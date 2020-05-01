@@ -121,7 +121,7 @@
 <script>
     ClassicEditor
     .create( document.querySelector( '#soal' ), {
-        toolbar: [ 'undo', 'redo','|', 'bold', 'italic', 'underline', '|', 'fontcolor', 'fontfamily', '|', 'bulletedList', 'numberedList', 'blockQuote' ],
+        toolbar: [ 'undo', 'redo','|', 'bold', 'italic', 'underline', '|','subscript', 'superscript','|', 'fontcolor', 'fontfamily', 'fontsize','|', 'bulletedList', 'numberedList', 'blockQuote' ],
         heading: {
             options: [
                 { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
