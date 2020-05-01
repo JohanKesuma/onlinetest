@@ -121,20 +121,41 @@
     </div>
 </div>
 
-<script src="<?= base_url('assets/js/ckeditor5/') ?>ckeditor.js"></script>
+<script
+    src="<?= base_url('assets/js/ckeditor5/') ?>ckeditor.js">
+</script>
 <script>
     ClassicEditor
-    .create( document.querySelector( '#soal' ), {
-        toolbar: [ 'undo', 'redo','|', 'bold', 'italic', 'underline', '|','subscript', 'superscript','|', 'fontcolor', 'fontfamily', 'fontsize','|', 'bulletedList', 'numberedList', 'blockQuote' ],
-        heading: {
-            options: [
-                { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-                { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
-                { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' }
+        .create(document.querySelector('#soal'), {
+            toolbar: ['undo', 'redo', '|', 'bold', 'italic', 'underline', '|', 'subscript', 'superscript', '|',
+                'fontcolor', 'fontfamily', 'fontsize', '|', 'bulletedList', 'numberedList', 'blockQuote'
             ]
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    createEditor();
+
+    function createEditor() {
+        let id = 'pilihan'
+
+        for (let index = 0; index < 5; index++) {
+            const currentId = id + (index + 1);
+            const input = document.getElementById(currentId)
+            ClassicEditor
+                .create(document.querySelector('#' + currentId), {
+                    toolbar: ['undo', 'redo', '|', 'bold', 'italic', 'underline', '|', 'subscript', 'superscript']
+                })
+                .then(editor => {
+                    editor.data.set(input.value);
+                    editor.model.document.on('change:data', () => {
+                        input.value = editor.getData();
+                    });
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         }
-    } )
-    .catch( error => {
-        console.log( error );
-    } );
+    }
 </script>

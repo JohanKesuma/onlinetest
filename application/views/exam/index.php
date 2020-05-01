@@ -15,7 +15,7 @@
     <div class="row justify-content-center my-2">
         <div class="col-sm-12">
             <div class="card shadow" style="">
-                <div class="card-body">
+                <div class="card-body" >
                     <?php if ($questions[$questions_index]['image'] != '') : ?>
                     <div style="overflow-x: auto; white-space: nowrap;">
                     <img style="min-width: 500px;" class="img-fluit w-100" src="<?= base_url('assets/img/'.$questions[$questions_index]['image']) ?>"
@@ -46,8 +46,7 @@
                                             value='<?= $answers['answers_id'] ?>'>
                                     </div>
                                 </div>
-                                <input readonly type="text" class="form-control bg-white"
-                                    value="<?= $answers['text'] ?>">
+                                <div style="height: auto;" class="form-control bg-white"><?= $answers['text'] ?></div>
                             </div>
                         </div>
                         <?php endforeach; ?>
