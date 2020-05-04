@@ -473,9 +473,14 @@ class Admin extends CI_Controller
      * Upload gambar soal
      *
      */
-    private function _doFileUpload($fileName, $fieldName)
+    private function _doFileUpload($fileName, $fieldName, $path = '')
     {
-        $config['upload_path']          = './assets/img/';
+        $uploadPath = './assets/img/'.$path;
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
+        }
+
+        $config['upload_path']          = $uploadPath;
         $config['allowed_types']        = 'gif|jpg|png';
         $config['max_size']             = 0;
         $config['max_width']            = 0;
@@ -505,7 +510,9 @@ class Admin extends CI_Controller
     public function hapusSoal($packageId, $questionId)
     {
         $fileName = $this->db->get_where('questions', ['questions_id' => $questionId])->row_array()['image'];
-        unlink('./assets/img/'.$fileName);
+        if ($fileName != '') {
+            unlink('./assets/img/'.$fileName);
+        }
         $this->db->where('questions_id', $questionId);
         $this->db->delete('questions');
         $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -539,5 +546,30 @@ class Admin extends CI_Controller
         
 
         redirect('admin/paketsoal');
+    }
+
+    public function uploadOptionImage($answerId)
+    {
+        $fileName = date('Y_m_d-H-i-s').'_'.$_FILES['answer_image']['name'];
+        $path = 'answers/'.$answerId.'/';
+        
+        $uploadReturn = $this->_doFileUpload($fileName, 'answer_image', $path);
+
+        if ($uploadReturn['uploaded'] == true) {
+            $this->load->model('AnswersModel');
+            $this->AnswersModel->updateImage($answerId, $uploadReturn['upload_data']['file_name']);
+            echo "Unggah gambar berhasil";
+            return true;
+        } else {
+            echo 'Unggah gambar gagal, '.$uploadReturn['error'];
+            return false;
+        }
+    }
+
+    public function deleteOptionImage($answerId)
+    {
+        $this->load->model('AnswersModel');
+        $this->AnswersModel->deleteImage($answerId);
+        echo "Deleted ".$answerId;
     }
 }

@@ -35,7 +35,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-11">
+                <div class="col-sm-11 mb-1">
 
                     <?php if ($q['image'] != '') : ?>
                     <div class="mb-1" style="overflow-x: auto; white-space: nowrap;">
@@ -49,9 +49,23 @@
                     <!-- <textarea rows="6" class="form-control" readonly><?= $count.'. '.$q['text'] ?></textarea> -->
                     
                     <?php foreach ($q['answers'] as $answers) : ?>
-                    <div class="row ml-5">
-                        <p><?= $answers['text']; ?>
-                        </p>
+                    <div class="row ml-5 p-1 mt-1" style="border-left: 3px solid rgba(0, 0, 0, .2); border-radius: 5px;">
+                        <div class="col">
+                            <?php if ($answers['image'] != '') : ?>
+                            <div class="row">
+                                <div class="col mb-1 mr-1" style="overflow-x: auto; white-space: nowrap;">
+                                    <img class="img-fluid" style="min-width: 200px;"
+                                        src="<?= base_url('assets/img/answers/'.$answers['answers_id'].'/').$answers['image']; ?>">
+                                </div>
+                            </div>
+                            
+                            <?php endif; ?>
+                            <div class="row">
+                                <div class="col">
+                                    <p><?= $answers['text']; ?></p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <?php endforeach; ?>
                 </div>

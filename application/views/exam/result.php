@@ -91,11 +91,17 @@
                                                 readonly></textarea> -->
                                             <?php foreach ($answer['answers'] as $a): ?>
                                             <div class="card <?php if ($a['is_true'] == 1) {
-    echo 'bg-success';
-} elseif ($a['answers_id'] == $answer['user_answer_id']) {
-    echo 'bg-danger';
-} ?>">
+                                                    echo 'bg-success';
+                                                } elseif ($a['answers_id'] == $answer['user_answer_id']) {
+                                                    echo 'bg-danger';
+                                                } ?>">
                                                 <div class="card-body">
+                                                    <?php if ($a['image'] != ''): ?>
+                                                        <div class="mb-1" style="overflow-x: auto; white-space: nowrap;">
+                                                            <img class="img-fluid" style="min-width: 200px;"
+                                                                src="<?= base_url('assets/img/answers/'.$a['answers_id'].'/').$a['image']; ?>">
+                                                        </div>
+                                                    <?php endif; ?>
                                                     <?= $a['text']; ?>
                                                 </div>
                                             </div>

@@ -47,6 +47,7 @@
                     </div>
                     <div class="form-group">
                         <label for="nama">Pilihan 1</label>
+                        <input type="file" id="img1" name="answer_image" data-max-file-size="3MB">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
@@ -65,6 +66,7 @@
                     </div>
                     <div class="form-group">
                         <label for="nama">Pilihan 2</label>
+                        <input type="file" id="img2" name="answer_image" data-max-file-size="3MB">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
@@ -83,6 +85,7 @@
                     </div>
                     <div class="form-group">
                         <label for="nama">Pilihan 3</label>
+                        <input type="file" id="img3" name="answer_image" data-max-file-size="3MB">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
@@ -101,6 +104,7 @@
                     </div>
                     <div class="form-group">
                         <label for="nama">Pilihan 4</label>
+                        <input type="file" id="img4" name="answer_image" data-max-file-size="3MB">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
@@ -120,6 +124,7 @@
                     </div>
                     <div class="form-group">
                         <label for="nama">Pilihan 5</label>
+                        <input type="file" id="img5" name="answer_image" data-max-file-size="3MB">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
@@ -150,6 +155,8 @@
 
     </div>
 </div>
+
+
 
 <script
     src="<?= base_url('assets/js/ckeditor5/') ?>ckeditor.js">
@@ -190,4 +197,159 @@
                 });
         }
     }
+</script>
+
+<!-- Get FilePond JavaScript and its plugins from the CDN -->
+<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+<script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-resize/dist/filepond-plugin-image-resize.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-crop/dist/filepond-plugin-image-crop.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.js">
+</script>
+<script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-transform/dist/filepond-plugin-image-transform.js"></script>
+
+
+<script>
+    FilePond.registerPlugin(
+        FilePondPluginImagePreview,
+        FilePondPluginImageExifOrientation,
+        FilePondPluginFileValidateSize,
+        FilePondPluginFileValidateType
+    );
+
+
+    const image = ['<?= $answers[0]['image'] ?>',
+        '<?= $answers[1]['image'] ?>',
+        '<?= $answers[2]['image'] ?>',
+        '<?= $answers[3]['image'] ?>',
+        '<?= $answers[4]['image'] ?>'
+    ];
+    for (let index = 1; index <= 5; index++) {
+        const currentId = 'img' + index;
+        const currentAnswerId = document.getElementById('pilihan' + index + '_id').value;
+        file = null;
+
+        if (image[index - 1] != '') {
+            file = [{
+                source: '<?= base_url('assets/img/answers/') ?>' + currentAnswerId + '/' + image[index - 1],
+                options: {
+                    type: 'local',
+                }
+            }]
+        }
+        const inputElement = document.getElementById(currentId);
+        const pond = FilePond.create(inputElement, {
+            acceptedFileTypes: [
+                'image/*'
+            ],
+            server: {
+                load: (source, load, error, progress, abort, headers) => {
+                    console.log('attempting to load', source);
+                    if (image != '') {
+                        fetch(source).then(res => {
+                            console.log(res)
+                            return res.blob()
+                        }).then(load)
+                    } else {
+                        abort();
+                    }
+                }
+            },
+            forceRevert: true,
+            labelIdle: '<span class="filepond--label-action"> Ungggah Gambar </span>',
+            files: file
+        });
+        pond.setOptions({
+
+            // maximum allowed file size
+            maxFileSize: '5MB',
+
+            // resize the image
+            imageResizeTargetWidth: 200,
+
+            // upload to this server end point
+            server: {
+                url: '<?= base_url() ?>',
+                process: {
+                    url: './admin/uploadoptionimage/' + currentAnswerId,
+                    method: 'POST',
+                    withCredentials: false,
+                    headers: {},
+                    timeout: 7000,
+                    onload: (response) => {
+                        console.log(response);
+                    },
+                    onerror: null,
+                    ondata: null
+                },
+                onload: (response) => {
+                    console.log(response);
+                    return response;
+                },
+                revert: (uniqueFileId, load, error) => {
+
+                    // Should remove the earlier created temp file here
+                    // ...
+                    // console.log("revert");
+                    let xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            console.log(this.responseText);
+                            load();
+                        }
+                    };
+                    xhttp.open("GET",
+                        "<?= base_url('admin/deleteOptionImage/') ?>" +
+                        currentAnswerId,
+                        true);
+                    xhttp.send();
+
+                    
+                    return {
+                        abort: () => {
+                            xhttp.abort();
+                            abort();
+                        }
+                    };
+
+
+                },
+                remove: (source, load, error) => {
+
+                    // Should somehow send `source` to server so server can remove the file with this source
+                    console.log("Remove");
+
+                    let xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            console.log(this.responseText);
+                            // Should call the load method when done, no parameters required
+                            load();
+                        }
+                    };
+                    xhttp.open("GET",
+                        "<?= base_url('admin/deleteOptionImage/') ?>" +
+                        currentAnswerId,
+                        true);
+                    xhttp.send();
+
+                    // Can call the error method if something is wrong, should exit after
+                    error('oh my goodness');
+
+                    
+                    return {
+                        abort: () => {
+                            xhttp.abort();
+                            abort();
+                        }
+                    };
+                }
+            }
+        });
+    }
+
+
+    // Register plugins
 </script>

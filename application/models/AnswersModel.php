@@ -25,4 +25,26 @@ class AnswersModel extends CI_Model
     {
         $this->db->update_batch('answers', $answersData, $key);
     }
+
+    public function updateImage($answerId, $imageFileName)
+    {
+        $this->db->where('answers_id', $answerId);
+        $this->db->update('answers', [
+            'image' => $imageFileName
+        ]);
+        return true;
+    }
+
+    public function deleteImage($answerId) {
+
+        // delete file gambar di storage
+        $fileName = $this->getById($answerId)['image'];
+        unlink('./assets/img/answers/'.$answerId.'/'.$fileName);
+
+        $this->db->where('answers_id', $answerId);
+        $this->db->update('answers', [
+            'image' => ''
+        ]);
+        return true;
+    }
 }

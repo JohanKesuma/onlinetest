@@ -46,7 +46,15 @@
                                             value='<?= $answers['answers_id'] ?>'>
                                     </div>
                                 </div>
-                                <div style="height: auto;" class="form-control bg-white"><?= $answers['text'] ?></div>
+                                <div style="height: auto;" class="form-control bg-white">
+                                    <?php if ($answers['image'] != ''): ?>
+                                        <div class="mb-1" style="overflow-x: auto; white-space: nowrap;">
+                                                <img class="img-fluid" style="min-width: 200px;"
+                                                src="<?= base_url('assets/img/answers/'.$answers['answers_id'].'/').$answers['image']; ?>">
+                                        </div>
+                                    <?php endif; ?>
+                                    <div style="height: auto;"><?= $answers['text'] ?></div>
+                                </div>
                             </div>
                         </div>
                         <?php endforeach; ?>
