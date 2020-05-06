@@ -28,7 +28,7 @@
                     <p class="card-text"></p>
                     <div class="form-group">
                         <div class="p-2" style="border: 1px solid rgba(0, 0, 0, .2); border-radius: 5px;min-height: 100px;">
-                            <?= $questions[$questions_index]['text']; ?>
+                            <?= $questions_index + 1 .'. '. $questions[$questions_index]['text']; ?>
                         </div>
                         <!-- <textarea class="form-control bg-white" id="exampleFormControlTextarea1" rows="6"
                             readonly><?= $questions[$questions_index]['text']; ?></textarea> -->
