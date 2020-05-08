@@ -49,6 +49,43 @@ class Exam extends CI_Controller
         $this->load->view('templates/foot');
     }
 
+    public function welcome() {
+        $package_id = $this->session->questions[0]['package_id'];
+        $exam = $this->ExamsModel->getByIdentityNumber($this->session->identity_number, $package_id);
+
+        if ($exam['start_date'] != '') {
+            redirect('/exam');
+            return;
+        }
+
+
+        if (isset($_POST['mulai'])) {
+            $t = $this->session->questions[0]['time'];
+            
+            $this->db->where([
+                'identity_number' => $this->user_id,
+                'package_id' => $package_id
+            ]);
+            $this->db->update('exams', [
+                'start_date' => date('Y-m-d H:i:s'),
+                'is_finished' => 0,
+                'next_timeout' => date("Y/m/d H:i:s", strtotime("+$t minutes")),
+                'question_index' => 0 // mulai dengan soal pertama
+            ]);
+            redirect('exam');
+        }
+
+        $this->load->model('ContentsModel');
+        $content = $this->ContentsModel->getByName('quiz_desc');
+
+        $data['title'] = 'Ujian';
+        $data['content'] = $content;
+
+        $this->load->view('templates/head', $data);
+        $this->load->view('exam/welcome', $data);
+        $this->load->view('templates/foot');
+    }
+
     public function next()
     {
         $package_id = $questions = $this->session->questions[0]['package_id'];

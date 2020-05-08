@@ -251,7 +251,7 @@ class Admin extends CI_Controller
             $id = $this->QuestPackagesModel->insert();
             $package_id = $id;
             $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
-            Paket berhasil ditambahkan.
+            Kuis berhasil ditambahkan.
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -288,7 +288,7 @@ class Admin extends CI_Controller
             $id = $this->QuestPackagesModel->update($package_id);
             $package_id = $id;
             $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
-            Paket berhasil diubah.
+            Kuis berhasil diubah.
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -529,7 +529,7 @@ class Admin extends CI_Controller
         $this->db->where('package_id', $package_id);
         $this->db->delete('quest_packages');
         $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
-            Paket berhasil dihapus.
+            Kuis berhasil dihapus.
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -571,5 +571,43 @@ class Admin extends CI_Controller
         $this->load->model('AnswersModel');
         $this->AnswersModel->deleteImage($answerId);
         echo "Deleted ".$answerId;
+    }
+
+    public function deskripsiKuis()
+    {
+        $this->load->model('ContentsModel');
+        $this->load->library('form_validation');
+
+        $this->form_validation->set_rules('content_form', "Deskripsi", 'required|trim');
+
+        if ($this->form_validation->run() == true) {
+            $this->ContentsModel->updateByName('quiz_desc', $this->input->post('content_form'));
+            $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+            Deskripsi berhasil disimpan.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>');
+            redirect('admin/deskripsikuis');
+            return;
+        }
+
+        $content = $this->ContentsModel->getByName('quiz_desc');
+        if (!$content) {
+            $this->ContentsModel->insert('quiz_desc');
+            $content = $this->ContentsModel->getByName('quiz_desc');
+        }
+
+
+        $data['user'] = $this->UserModel->getByIdentityNumber($this->user_id);
+        $data['title'] = 'Deskripsi Kuis';
+        $data['content'] = $content;
+        $data['parentUrl'] = base_url('admin');
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('admin/deskripsikuis', $data);
+        $this->load->view('templates/footer');
     }
 }

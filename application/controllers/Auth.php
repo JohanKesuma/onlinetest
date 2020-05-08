@@ -82,7 +82,7 @@ class Auth extends CI_Controller
 
                     $this->_createExam($questions, $nis, $package_id);
 
-                    redirect('exam');
+                    redirect('exam/welcome');
                 }
             } else { // password salah
                 $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">
@@ -107,7 +107,7 @@ class Auth extends CI_Controller
             $exam_data = [
                 'identity_number' => $identity_number,
                 'package_id' => $package_id,
-                'start_date' => date('Y-m-d H:i:s'),
+                'start_date' => '',
                 'is_finished' => 0,
                 'next_timeout' => date("Y/m/d H:i:s", strtotime("+$firstQuestionTime minutes")),
                 'question_index' => 0 // mulai dengan soal pertama

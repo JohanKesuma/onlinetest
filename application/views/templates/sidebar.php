@@ -61,6 +61,13 @@
             <span>Paket Soal</span></a>
     </li>
 
+    <li class="nav-item">
+        <a class="nav-link"
+            href="<?= base_url('admin/deskripsikuis') ?>">
+            <i class="fas fa-fw fa-user"></i>
+            <span>Deskripsi Kuis</span></a>
+    </li>
+
     <!-- Divider -->
     <hr class="sidebar-divider">
 
