@@ -33,6 +33,12 @@
                             value="<?= $questPackage['name']; ?>">
                         <small class="form-text text-danger"><?= form_error('name'); ?></small>
                     </div>
+                    <div class="form-group">
+                        <label for="nama">Judul</label>
+                        <input type="text" class="form-control" id="judul" name="judul"
+                            value="<?= $questPackage['judul']; ?>">
+                        <small class="form-text text-danger"><?= form_error('judul'); ?></small>
+                    </div>
                     <button class="btn btn-primary float-right" name="tambah" type="submit">Ubah</button>
                 </form>
             </div>
@@ -40,3 +46,29 @@
 
     </div>
 </div>
+
+<script
+    src="<?= base_url('assets/js/ckeditor5/') ?>ckeditor.js">
+</script>
+
+<script>
+    createEditor();
+
+    function createEditor() {
+        let id = 'pilihan'
+        const input = document.getElementById('judul')
+        ClassicEditor
+            .create(document.querySelector('#judul'), {
+                toolbar: ['undo', 'redo', '|', 'bold', 'italic', 'underline', '|', 'subscript', 'superscript']
+            })
+            .then(editor => {
+                editor.data.set(input.value);
+                editor.model.document.on('change:data', () => {
+                    input.value = editor.getData();
+                });
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+</script>

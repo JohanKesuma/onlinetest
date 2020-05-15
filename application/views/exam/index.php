@@ -3,9 +3,9 @@
     <div class="row justify-content-center">
         <div class="col-sm-12">
             <div class="card shadow bg-primary text-white">
-                <div class="card-body">
-                    <h4 class="float-left">Soal <?= $questions_index + 1; ?>/<?= count($questions) ?></h4>
-                    <h4 class="float-right">Waktu : <span id="time"></span>
+                <div class="card-body" >
+                    <h4 style="margin-bottom: 0px" class="float-left">Soal <?= $questions_index + 1; ?>/<?= count($questions) ?></h4>
+                    <h4 style="margin-bottom: 0px" class="float-right">Waktu : <span id="time"></span>
                     </h4>
                 </div>
             </div>

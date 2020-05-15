@@ -18,10 +18,12 @@ class QuestPackagesModel extends CI_Model
     {
         $id = $this->input->post('package_id');
         $name = $this->input->post('name');
+        $judul = $this->input->post('judul');
 
         $data = [
             'package_id' => $id,
-            'name' => $name
+            'name' => $name,
+            'judul' => $judul
         ];
 
         $this->db->where('package_id', $package_id);
@@ -33,10 +35,12 @@ class QuestPackagesModel extends CI_Model
     {
         $package_id = $this->input->post('package_id');
         $name = $this->input->post('name');
+        $judul = $this->input->post('judul');
 
         $data = [
             'package_id' =>$package_id,
-            'name' => $name
+            'name' => $name,
+            'judul' => $judul
         ];
 
         $this->db->insert('quest_packages', $data);

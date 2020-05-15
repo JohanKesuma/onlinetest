@@ -275,7 +275,18 @@ class Admin extends CI_Controller
     {
         $this->load->library('form_validation');
 
-        $this->form_validation->set_rules('package_id', "ID Paket", 'required|trim|is_unique[quest_packages.package_id]', [
+        $number = $this->input->post('package_id');
+        if ($number) {
+            if ($package_id == $number) {
+                $is_unique = '';
+            } else {
+                $is_unique = '|is_unique[quest_packages.package_id]';
+            }
+        } else {
+            $is_unique = '|is_unique[quest_packages.package_id]';
+        }
+
+        $this->form_validation->set_rules('package_id', "ID Paket", 'required|trim'.$is_unique, [
             'required' => 'ID Paket tidak boleh kosong'
         ]);
         $this->form_validation->set_rules('name', "Nama", 'required|trim', [

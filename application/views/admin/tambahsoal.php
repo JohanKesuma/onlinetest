@@ -121,19 +121,28 @@
     </div>
 </div>
 
+<!-- CKEditor 4 -->
+<script src="//cdn.ckeditor.com/4.14.0/full/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('soal', {
+        customConfig: '<?= base_url('assets/js/ckeditor4/config.js') ?>'
+    });
+    
+</script>
+
 <script
     src="<?= base_url('assets/js/ckeditor5/') ?>ckeditor.js">
 </script>
 <script>
-    ClassicEditor
-        .create(document.querySelector('#soal'), {
-            toolbar: ['undo', 'redo', '|', 'bold', 'italic', 'underline', '|', 'subscript', 'superscript', '|',
-                'fontcolor', 'fontfamily', 'fontsize', '|', 'bulletedList', 'numberedList', 'blockQuote'
-            ]
-        })
-        .catch(error => {
-            console.log(error);
-        });
+    // ClassicEditor
+    //     .create(document.querySelector('#soal'), {
+    //         toolbar: ['undo', 'redo', '|', 'bold', 'italic', 'underline', '|', 'subscript', 'superscript', '|',
+    //             'fontcolor', 'fontfamily', 'fontsize', '|', 'bulletedList', 'numberedList', 'blockQuote'
+    //         ]
+    //     })
+    //     .catch(error => {
+    //         console.log(error);
+    //     });
 
     createEditor();
 
@@ -143,19 +152,30 @@
         for (let index = 0; index < 5; index++) {
             const currentId = id + (index + 1);
             const input = document.getElementById(currentId)
-            ClassicEditor
-                .create(document.querySelector('#' + currentId), {
-                    toolbar: ['undo', 'redo', '|', 'bold', 'italic', 'underline', '|', 'subscript', 'superscript']
-                })
-                .then(editor => {
-                    editor.data.set(input.value);
-                    editor.model.document.on('change:data', () => {
-                        input.value = editor.getData();
-                    });
-                })
-                .catch(error => {
-                    console.log(error);
-                });
+            // ClassicEditor
+            //     .create(document.querySelector('#' + currentId), {
+            //         toolbar: ['undo', 'redo', '|', 'bold', 'italic', 'underline', '|', 'subscript', 'superscript']
+            //     })
+            //     .then(editor => {
+            //         editor.data.set(input.value);
+            //         editor.model.document.on('change:data', () => {
+            //             input.value = editor.getData();
+            //         });
+            //     })
+            //     .catch(error => {
+            //         console.log(error);
+            //     });
+            const editor = CKEDITOR.replace(currentId, {
+                customConfig: '<?= base_url('assets/js/ckeditor4/config.js') ?>',
+                height: 70
+            });
+            editor.setData(input.value);
+            editor.on( 'change', function( evt ) {
+                // getData() returns CKEditor's HTML content.
+                input.value = evt.editor.getData();
+                console.log( 'Total bytes: ' + evt.editor.getData() );
+            });
         }
     }
 </script>
+

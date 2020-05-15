@@ -41,6 +41,9 @@ class Exam extends CI_Controller
         }
 
         $data['remaining_time'] = $diff;
+        $this->load->model('QuestPackagesModel');
+        $questPackage = $this->QuestPackagesModel->getById($package_id);
+        $data['questPackage'] = $questPackage;
 
         // $this->session->set_userdata('exam_pacakage_id', );
 
@@ -80,6 +83,10 @@ class Exam extends CI_Controller
 
         $data['title'] = 'Ujian';
         $data['content'] = $content;
+
+        $this->load->model('QuestPackagesModel');
+        $questPackage = $this->QuestPackagesModel->getById($package_id);
+        $data['questPackage'] = $questPackage;
 
         $this->load->view('templates/head', $data);
         $this->load->view('exam/welcome', $data);
@@ -168,6 +175,10 @@ class Exam extends CI_Controller
 
         $user = $this->UserModel->getByIdentityNumber($this->user_id);
         $questPackageName = $this->QuestPackagesModel->getById($exam['package_id'])['name'];
+
+        $this->load->model('QuestPackagesModel');
+        $questPackage = $this->QuestPackagesModel->getById($package_id);
+        $data['questPackage'] = $questPackage;
 
         $data['title'] = 'Hasil Ujian';
         $data['exam'] = $exam;

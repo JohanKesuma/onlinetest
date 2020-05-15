@@ -7,7 +7,7 @@
 
                     <!-- Header -->
                     <div class="row mx-3 d-flex flex-column">
-                        <h4>
+                        <h4 style="margin-bottom: 0px;text-align: center;">
                             Hasil Ujian <?= $quest_package_name; ?>
                         </h4>
 
@@ -26,7 +26,7 @@
                     <!-- Nilai -->
                     <div class="card shadow">
                         <div class="card-header">
-                            <h5 class="card-title"><?= $user['name'] ?> /
+                            <h5 style="margin-bottom: 0px" class="card-title"><?= $user['name'] ?> /
                                 <?= $user['identity_number'] ?>
                             </h5>
                         </div>
